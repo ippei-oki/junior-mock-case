@@ -1,0 +1,12 @@
+.pagination {
+  text-align: center;
+}
+
+.pagination li{
+  display: inline-block;
+}
+
+svg.w-5.h-5 {
+  width: 30px;
+  height: 30px;
+}

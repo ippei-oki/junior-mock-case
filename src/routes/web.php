@@ -19,3 +19,4 @@ Route::get('/work_start', 'App\Http\Controllers\AttendanceController@work_start'
 Route::get('/work_end', 'App\Http\Controllers\AttendanceController@work_end')->name('timestamp/work_end');
 Route::get('/break_start', 'App\Http\Controllers\AttendanceController@break_start')->name('timestamp/break_start');
 Route::get('/break_end', 'App\Http\Controllers\AttendanceController@break_end')->name('timestamp/break_end');
+Route::get('/attendance', [AttendanceController::class, 'date']);

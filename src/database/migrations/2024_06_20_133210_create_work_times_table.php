@@ -13,12 +13,15 @@ class CreateWorktimesTable extends Migration
      */
     public function up()
     {
-        Schema::create('worktimes', function (Blueprint $table) {
+        Schema::create('work_times', function (Blueprint $table) {
             $table->id();
+            $table->integer('user_id');
+            $table->string('user_name')->nullable();
             $table->timestamp('work_start')->nullable();
             $table->timestamp('work_end')->nullable();
+            $table->time('total_time')->nullable();
+            $table->time('total_break_time')->nullable();
             $table->time('work_time')->nullable();
-            $table->integer('user_id');
             $table->timestamps();
         });
     }
@@ -30,6 +33,6 @@ class CreateWorktimesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('worktimes');
+        Schema::dropIfExists('work_times');
     }
 }

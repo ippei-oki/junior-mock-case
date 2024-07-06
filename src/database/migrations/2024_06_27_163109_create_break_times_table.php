@@ -13,11 +13,12 @@ class CreateBreaktimesTable extends Migration
      */
     public function up()
     {
-        Schema::create('breaktimes', function (Blueprint $table) {
+        Schema::create('break_times', function (Blueprint $table) {
             $table->id();
+            $table->integer('work_time_id')->nullable();
             $table->timestamp('break_start')->nullable();
             $table->timestamp('break_end')->nullable();
-            $table->integer('work_time_id');
+            $table->time('break_time')->nullable();           
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ class CreateBreaktimesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('breaks');
+        Schema::dropIfExists('break_times');
     }
 }

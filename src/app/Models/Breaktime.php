@@ -9,12 +9,14 @@ class Breaktime extends Model
 {
     use HasFactory;
 
+    protected $table = 'break_times';
+
     protected $fillable = [
-        'break_start', 'break_end', 'work_time_id',
+        'work_time_id', 'break_start', 'break_end', 'break_time',
     ];
 
     public function worktime()
     {
-        return $this->belongsTo(Worktime::class);
+        $this->belongsTo(Worktime::class);
     }
 }

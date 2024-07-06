@@ -18,11 +18,7 @@
 @section('content')
 <div class="stamp">
   <div class="stamp__greeting">
-    @if (Auth::check())
-      <h2>{{ Auth::user()->name }}さんお疲れ様です!</h2>
-    @else
-      <h2>ログインしてください</h2>
-    @endif
+    <h2>{{ Auth::user()->name }}さんお疲れ様です!</h2>
   </div>
   <div class="stamp__area">
     <form action="{{ route('timestamp/work_start') }}" method="get">

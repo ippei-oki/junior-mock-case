@@ -9,12 +9,14 @@ class Worktime extends Model
 {
     use HasFactory;
 
+    protected $table = 'work_times';
+
     protected $guarded = [
         'id',
     ];
 
     protected $fillable = [
-        'work_start', 'work_end', 'work_time', 'user_id',
+        'user_id', 'user_name', 'work_start', 'work_end', 'total_time', 'total_break_time', 'work_time',
     ];
 
     public function user()
@@ -22,7 +24,7 @@ class Worktime extends Model
         $this->belongsTo(User::class);
     }
 
-    public function breaktimes()
+    public function breaks()
     {
         return $this->hasMany(Breaktime::class);
     }

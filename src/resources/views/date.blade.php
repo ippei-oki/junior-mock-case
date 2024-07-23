@@ -8,20 +8,22 @@
 <div class="header__link">
   <a class="header__link--btn" href="/">ホーム</a>
   <a class="header__link--btn" href="/attendance">日付一覧</a>
-  <form class="header__link--btn" action="/logout" method="post">
-    @csrf
-    <button>ログアウト</button>
-  </form>
+  <div style="display:inline-flex">
+    <form class="header__link--btn" action="/logout" method="post">
+      @csrf
+      <button>ログアウト</button>
+    </form>
+  </div>
 </div>
 @endsection
 
 @section('content')
 <div class="date-select">
-  <a href="{{ url('/work-times?date=' . \Carbon\Carbon::parse($date)->subDay()->toDateString()) }}">&lt;</a>
-  <span>{{ $date }}</span>
-  <a href="{{ url('/work-times?date=' . \Carbon\Carbon::parse($date)->addDay()->toDateString()) }}">&gt;</a>
+  <a class="date-select__btn" href="{{ url('/work-times?date=' . \Carbon\Carbon::parse($date)->subDay()->toDateString()) }}">&lt;</a>
+  <span class="date-select__txt">{{ $date }}</span>
+  <a class="date-select__btn" href="{{ url('/work-times?date=' . \Carbon\Carbon::parse($date)->addDay()->toDateString()) }}">&gt;</a>
 </div>
-<div>
+<div class="date-table">
   <table>
     <tr>
       <th>名前</th>
@@ -42,6 +44,6 @@
   </table>
 </div>
 <div class="paginate">
-  {{ $workTimes->links() }}
+  {{ $workTimes->appends(request()->query())->links() }}
 </div>
 @endsection

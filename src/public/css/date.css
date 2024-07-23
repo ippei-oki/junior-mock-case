@@ -1,9 +1,60 @@
+.content {
+  background-color: whitesmoke;
+}
+
+.date-select {
+  padding: 30px 0;
+  text-align: center;
+  font-size: 20px;
+}
+
+.date-select__txt {
+  padding: 0 20px;
+}
+
+.date-select__btn {
+  text-decoration: none;
+  color: blue;
+  background-color: white;
+  border: solid 1px blue;
+  padding: 0 5px;
+}
+
+.date-table {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 10px 30px;
+}
+
+table {
+  width: 100%;
+}
+
+tr {
+  line-height: 50px;
+}
+
+th {
+  border-top: solid 1px gray;
+}
+
+td {
+  text-align: center;
+  border-top: solid 1px gray;
+}
+
 .pagination {
   text-align: center;
 }
 
 .pagination li{
   display: inline-block;
+  font-size: 20px;
+  background-color: white;
+  color: blue;
+  padding: 0 5px;
+  margin-bottom: 50px;
 }
 
 svg.w-5.h-5 {

@@ -32,6 +32,20 @@ class AttendanceController extends Controller
 
     public function work_end(Request $id)
     {
+        $break_conf = Breaktime::whereNull('break_end')->latest()->first();
+        if ($break_conf) {
+            $user = Auth::user();
+            $breaktime = Breaktime::whereNotNull('work_time_id')->latest()->first();
+
+            $break_start = Carbon::parse($breaktime->break_start);
+            $break_end = Carbon::now();
+            $break_duration = $break_end->diff($break_start)->format('%H:%I:%S');
+
+            $breaktime->break_end = $break_end;
+            $breaktime->break_time = $break_duration;
+            $breaktime->save();
+        }
+
         $user = Auth::user();
         $worktime = Worktime::whereNotNull('id')->latest()->first();
 
@@ -98,9 +112,11 @@ class AttendanceController extends Controller
         $date = $request->query('date', Carbon::today()->toDateString());
         $startOfDay = Carbon::parse($date)->startOfDay();
         $endOfDay = Carbon::parse($date)->endOfDay();
-        $workTimes = WorkTime::whereBetween('work_start', [$startOfDay, $endOfDay])->get();
-        $workTimes = WorkTime::Paginate(5);
-        return view('date', compact('workTimes', 'date'));
+        $workTimes = WorkTime::whereBetween('work_start', [$startOfDay, $endOfDay])->paginate(5);
+        return view('date', [
+          'workTimes' => $workTimes,
+          'date' => $date,
+        ]);
     }
     
 }

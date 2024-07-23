@@ -8,10 +8,12 @@
 <div class="header__link">
   <a class="header__link--btn" href="/">ホーム</a>
   <a class="header__link--btn" href="/attendance">日付一覧</a>
-  <form class="header__link--btn" action="/logout" method="post">
-    @csrf
-    <button>ログアウト</button>
-  </form>
+  <div style="display:inline-flex">
+    <form class="header__link--btn" action="/logout" method="post">
+      @csrf
+      <button>ログアウト</button>
+    </form>
+  </div>
 </div>
 @endsection
 

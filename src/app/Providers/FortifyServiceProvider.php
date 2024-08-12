@@ -9,6 +9,8 @@ use App\Actions\Fortify\UpdateUserProfileInformation;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Fortify;
@@ -34,6 +36,25 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Fortify::authenticateUsing(function (Request $request) {
+            // 認証ロジック
+            $user = Auth::attempt($request->only('email', 'password'));
+
+            if ($user) {
+                $authenticatedUser = Auth::user();
+
+                // デバッグ用のログ
+                \Log::info('User authenticated with ID: ' . $authenticatedUser->id);
+
+                // キャッシュにユーザーIDを保存
+                Cache::put('current_user_id', $authenticatedUser->id);
+
+                return $authenticatedUser;
+            }
+
+            return null;
+        });
+
         Fortify::createUsersUsing(CreateNewUser::class);
         
         Fortify::registerView(function () {
@@ -43,6 +64,14 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::loginView(function () {
             return view('auth.login');
         });
+
+        Fortify::verifyEmailView(function() {
+            return view('auth.verify-email');
+        });
+        Fortify::createUsersUsing(CreateNewUser::class);
+        Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
+        Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
+        Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
 
         RateLimiter::for('login', function (Request $request) {
             $email = (string) $request->email;

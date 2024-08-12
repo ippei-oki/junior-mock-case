@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -15,8 +16,17 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('attendance:work_end')->dailyAt('10:47');
-        // $schedule->command('attendance:work_start')->dailyAt('00:00');
+        $schedule->call(function () {
+            $current_time = now()->format('H:i');
+
+            if ($current_time == '09:29') {
+                Artisan::call('attendance:work_end');
+            }
+
+            if ($current_time == '09:30') {
+                Artisan::call('attendance:work_start');
+            }
+        })->everyMinute();
     }
 
     /**

@@ -3,8 +3,11 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Http\Controllers\AttendanceController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use App\Http\Controllers\AttendanceController;
+use App\Models\User;
 
 class WorkStartCommand extends Command
 {
@@ -39,9 +42,11 @@ class WorkStartCommand extends Command
      */
     public function handle()
     {
+        $userId = Cache::get('current_user_id');
+        $user = User::find($userId);
+        Auth::login($user);
         $controller = new AttendanceController();
-        $request = new Request();
-        $controller->work_start($request);
+        $controller->work_start();
         
         $this->info('AttendanceController@work_start has been called.');
     }

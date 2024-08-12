@@ -3,19 +3,45 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ResisterRequest;
-use Carbon\Carbon;
-use Carbon\CarbonInterval;
 use App\Models\User;
 use App\Models\Worktime;
 use App\Models\Breaktime;
+use Carbon\Carbon;
+use Carbon\CarbonInterval;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class AttendanceController extends Controller
 {
     public function stamp()
     {
         return view('stamp');
+    }
+
+    public function date(Request $request)
+    {
+        $date = $request->query('date', Carbon::today()->toDateString());
+        $startOfDay = Carbon::parse($date)->startOfDay();
+        $endOfDay = Carbon::parse($date)->endOfDay();
+        $workTimes = WorkTime::whereBetween('work_start', [$startOfDay, $endOfDay])->paginate(5);
+        return view('date', [
+          'workTimes' => $workTimes,
+          'date' => $date,
+        ]);
+    }
+
+    public function user_list()
+    {
+        $users = User::Paginate(5);
+        return view('user_list', ['users' => $users]);
+    }
+
+    public function user_date()
+    {
+        $user = Auth::user();
+        $workTimes = Worktime::where('user_id', $user->id)->paginate(5);
+        return view('user_date', ['workTimes' => $workTimes]);
     }
 
     public function work_start()
@@ -44,6 +70,13 @@ class AttendanceController extends Controller
             $breaktime->break_end = $break_end;
             $breaktime->break_time = $break_duration;
             $breaktime->save();
+
+            $worktime = Worktime::whereNull('work_end')->latest()->first();
+            $breaktime = new Breaktime();
+            $breaktime->work_time_id = $worktime->id;
+            $breaktime->break_start = Carbon::now();
+            $breaktime->save();
+
         }
 
         $user = Auth::user();
@@ -90,7 +123,6 @@ class AttendanceController extends Controller
         return redirect('/');
     }
 
-
     public function break_end(Request $request)
     {
         $user = Auth::user();
@@ -107,16 +139,4 @@ class AttendanceController extends Controller
         return redirect('/');
     }
 
-    public function date(Request $request)
-    {
-        $date = $request->query('date', Carbon::today()->toDateString());
-        $startOfDay = Carbon::parse($date)->startOfDay();
-        $endOfDay = Carbon::parse($date)->endOfDay();
-        $workTimes = WorkTime::whereBetween('work_start', [$startOfDay, $endOfDay])->paginate(5);
-        return view('date', [
-          'workTimes' => $workTimes,
-          'date' => $date,
-        ]);
-    }
-    
 }

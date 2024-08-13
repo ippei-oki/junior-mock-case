@@ -19,11 +19,11 @@ class Kernel extends ConsoleKernel
         $schedule->call(function () {
             $current_time = now()->format('H:i');
 
-            if ($current_time == '09:29') {
+            if ($current_time == '23:59') {
                 Artisan::call('attendance:work_end');
             }
 
-            if ($current_time == '09:30') {
+            if ($current_time == '00:00') {
                 Artisan::call('attendance:work_start');
             }
         })->everyMinute();

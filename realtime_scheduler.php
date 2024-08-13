@@ -11,12 +11,12 @@ use Illuminate\Support\Facades\Artisan;
 while (true) {
     $current_time = Carbon::now()->format('H:i:s');
 
-    if ($current_time == '11:31:59') {
+    if ($current_time == '23:59:59') {
         Artisan::call('attendance:work_end');
         \Log::info("Executed attendance:work_end at " . $current_time);
     }
 
-    if ($current_time == '11:32:00') {
+    if ($current_time == '00:00:00') {
         Artisan::call('attendance:work_start');
         \Log::info("Executed attendance:work_start at " . $current_time);
     }
